@@ -18,12 +18,14 @@ function LandingPage() {
           <title>File Upload to Gemini</title>
       </head>
       <body>
+        <div>
           <h2>Upload a PDF to Summarize</h2>
           <input type="file" id="fileInput" accept="application/pdf" />
           <button id="uploadButton">Summarize</button>
           <div id="summaryDiv"></div>
 
           <script src="server.js"></script>
+        </div>
       </body>
     </html>
   );

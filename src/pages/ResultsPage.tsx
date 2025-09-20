@@ -1,20 +1,61 @@
-// src/pages/ResultsPage.tsx
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import './ResultsPage.css';
 
-// Define the types for the props we're receiving
+// ====================================================================
+// SwitchViewButton component (no changes needed here)
+// ====================================================================
+interface SwitchViewButtonProps {
+  onSwitch: () => void;
+}
+const SwitchViewButton: React.FC<SwitchViewButtonProps> = ({ onSwitch }) => {
+  return (
+    <button
+      onClick={onSwitch}
+      className="switch-view-button"
+      aria-label="Switch view"
+    >
+      <>&#x2192;</> {/* Arrow Icon */}
+    </button>
+  );
+};
+
+// ====================================================================
+// Updated and Fixed ResultsPage component
+// ====================================================================
 interface ResultsPageProps {
-  aiText: string;
-  isLoading: boolean;
+  onSwitch: () => void; // <-- Added onSwitch here
 }
 
-function ResultsPage({ aiText, isLoading }: ResultsPageProps) {
-  // This component no longer needs useLocation or Link
+function ResultsPage({ onSwitch }: ResultsPageProps) {
+  // 1. Get the location object to access the passed state
+  const location = useLocation();
+
+  // 2. Create state to manage the textarea's content
+  const [textContent, setTextContent] = useState('');
+
+  // 3. Safely set the state when the component loads
+  useEffect(() => {
+    // Check if state and the specific data exist to prevent errors
+    if (location.state && location.state.extractedData) {
+      setTextContent(location.state.extractedData);
+    }
+  }, [location.state]); // This runs when the component mounts
+
   return (
-    <div>
-      <h2>Generated Content</h2>
-      <div style={{ marginTop: "1rem", padding: "1rem", whiteSpace: "pre-wrap", backgroundColor: '#f9f9f9', borderRadius: '8px', minHeight: '300px' }}>
-        {/* Show a loading indicator or the text */}
-        {isLoading ? <p>Loading...</p> : <p>{aiText}</p>}
+    <div className="results-container">
+      <div className="results-content">
+        <h2 className="results-title">Extracted Content</h2>
+        {/* 4. The textarea is now a controlled component linked to our state */}
+        <textarea
+          className="text-editor"
+          value={textContent}
+          onChange={(e) => setTextContent(e.target.value)}
+          rows={20}
+          placeholder="Extracted text will appear here..."
+        />
       </div>
+      <SwitchViewButton onSwitch={onSwitch} />
     </div>
   );
 }

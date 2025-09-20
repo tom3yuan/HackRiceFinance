@@ -1,0 +1,90 @@
+/* src/pages/HomePage.css */
+
+/* This container will use flexbox to structure our component vertically */
+.home-page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures it fills the parent panel */
+  font-family: 'Poppins', sans-serif; /* Consistent font with landing page */
+  animation: fadeIn 0.5s ease-in-out; /* A subtle fade-in effect */
+}
+
+.home-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50; /* A dark, professional navy color */
+  margin: 0;
+}
+
+.react-pdf__Page__canvas {
+  background: transparent !important; /* or transparent */
+}
+
+.home-subtitle {
+  font-size: 1rem;
+  color: #7f8c8d; /* A softer grey for the subtitle */
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.prompt-textarea {
+  flex-grow: 1; /* This is key: makes the textarea fill available space */
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #34495e;
+  border: 2px solid #dfe4ea;
+  border-radius: 12px;
+  resize: none; /* We control resizing with flexbox */
+  box-sizing: border-box; /* Important for correct padding calculation */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+/* A "glow" effect when the user is typing */
+.prompt-textarea:focus {
+  outline: none;
+  border-color: #4facfe;
+  box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+}
+
+.generate-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* A subtle lift effect on hover */
+.generate-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(0, 242, 254, 0.4);
+}
+
+.generate-button:disabled {
+  background: #bdc3c7; /* A flat grey when disabled */
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.button-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* We can reuse this simple animation from the landing page */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
