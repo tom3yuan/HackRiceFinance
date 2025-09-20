@@ -1,0 +1,25 @@
+/* src/layouts/GeneratorLayout.css */
+.generator-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f0f2f5;
+  font-family: sans-serif;
+}
+
+.left-panel {
+  flex: 1; /* Take up half the space */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  flex: 1; /* Take up a bit more space */
+  padding: 2rem;
+  background-color: #ffffff;
+  border-left: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Allow scrolling for long responses */
+}

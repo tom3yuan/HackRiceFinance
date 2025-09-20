@@ -1,0 +1,101 @@
+/* src/pages/LandingPage.css */
+
+/* --- Main Container & Background --- */
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full screen height */
+  width: 100vw; /* Full screen width */
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  color: white;
+  font-family: 'Poppins', sans-serif; /* A nice, clean font */
+  overflow: hidden; /* Hide any overflow */
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.content-wrapper {
+  text-align: center;
+}
+
+/* --- Title Styling --- */
+.landing-title {
+  font-size: 5rem; /* Large and impactful */
+  font-weight: 700;
+  letter-spacing: 4px; /* Gives it a bit of air */
+  margin-bottom: 2rem;
+  
+  /* The cool gradient text effect */
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+
+  /* Subtle text shadow for depth */
+  text-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
+}
+
+/* --- Start Button Styling --- */
+.start-button {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  padding: 1rem 3rem;
+  border-radius: 50px; /* Pill shape */
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+  
+  /* Smooth transition for hover effects */
+  transition: all 0.3s ease-in-out;
+
+  /* The 'breathing' animation */
+  animation: pulse 2s infinite;
+}
+
+/* --- Button Hover Effect --- */
+.start-button:hover {
+  transform: scale(1.05); /* Slightly enlarge the button */
+  box-shadow: 0 0 35px rgba(0, 242, 254, 0.7);
+  animation-play-state: paused; /* Stop pulsing on hover */
+}
+
+
+/* --- Keyframe Animations --- */
+
+/* For the whole page fading in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* For the button's 'breathing' glow */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+  }
+}
+
+/* --- Responsive Design for Smaller Screens --- */
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 3rem;
+  }
+  .start-button {
+    font-size: 1.2rem;
+    padding: 0.8rem 2.5rem;
+  }
+}
