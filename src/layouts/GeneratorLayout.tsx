@@ -86,6 +86,8 @@ function GeneratorLayout() {
         
       </div>
       <div className="right-panel">
+                        <h3 style={{ margin: 0, color: 'black' }}>Summary</h3>
+
         {rightPanelView === 'simple' ? (
           <ResultsPage 
             onSwitch={handleViewSwitch}

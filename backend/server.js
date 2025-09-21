@@ -170,7 +170,6 @@ app.post("/complex-extract", upload.single('file'), async (req, res) => {
     const textContent = result.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (textContent) {
-      console.log("HERE")
       res.status(200).json(textContent);
     } else {
       console.error("Unexpected API response structure:", result);
@@ -239,6 +238,7 @@ app.post("/api/explain", async (req, res) => {
     //   console.error("Unexpected API response structure:", result);
     //   throw new Error("Failed to get a valid response from the API.");
     // }
+    console.log("api/explanation");
     return res.status(200).json("This is explanation.")
   } catch (err) {
     console.error("Error in /api/explain:", err);

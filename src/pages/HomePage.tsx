@@ -93,7 +93,7 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
     gap: "16px" // optional spacing between items
 }}>
     
-    <h3 style={{ margin: 0, color: "black" }}>📄 Document Preview</h3>
+    <h3 style={{ margin: 0, color: "black" }}>Document Preview</h3>
 
     <button
         onClick={onSwitchtoPDF}
@@ -103,7 +103,7 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
     border: "none",
     height: "35px",
     background: "#6EB644",
-    color: "#1a202c",
+    color: "#000000ff",
     fontSize: "15px",
     cursor: "pointer",
     display: "flex",

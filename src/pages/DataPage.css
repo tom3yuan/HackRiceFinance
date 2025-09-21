@@ -9,14 +9,10 @@
   background-color: transparent; 
   color: #e2e8f0; /* Tailwind gray-300 */
   min-height: 100vh;
-  animation: fadeIn 0.3s ease-in-out;
 
 }
 
-.animation{
-  animation: fadeIn 0.3s ease-in-out;
 
-}
 
 .data-page-header {
   text-align: center;

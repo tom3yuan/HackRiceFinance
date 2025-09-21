@@ -11,7 +11,6 @@ interface SwitchViewButtonProps {
 const SwitchViewButton: React.FC<SwitchViewButtonProps> = ({ onSwitch }) => {
   return (
     <div>
-    <h3 style={{ margin: 0, color: 'black' }}>Summary:</h3>
 
 
     <button
@@ -55,8 +54,9 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
 
   return (
     <div className="scroll-wrapper">
-    <div className="results-container">
       
+    <div className="results-container">
+
       <div className="results-content">
         
         <h2 className="results-title">RESULTS</h2>
@@ -112,7 +112,10 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
         )}
       </div>
       </div>
+      <div>
+
       <SwitchViewButton onSwitch={onSwitch} />
+      </div>
     </div>
   );
 }

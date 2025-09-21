@@ -150,11 +150,14 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
       return;
     }
 
+    // Make sure the canvas itself has a white background
+    canvas.style.backgroundColor = '#FFFFFF';
+
     // Destroy any existing chart before creating a new one
     if (chartRef.current) {
       chartRef.current.destroy();
       chartRef.current = null;
-    };
+    }
 
     chartRef.current = new Chart(ctx, {
       type: 'line',
@@ -164,13 +167,13 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
           {
             label: `${symbol} Closing Price (USD)`,
             data: dataPoints,
-            borderColor: 'rgb(34, 211, 238)',
-            backgroundColor: 'rgba(34, 211, 238, 0.1)',
+            borderColor: 'rgb(34, 197, 94)', // green line
+            backgroundColor: 'rgba(34, 197, 94, 0.1)', // not used when fill=false
             borderWidth: 2,
             pointRadius: 1,
             pointHoverRadius: 6,
             tension: 0.1,
-            fill: true,
+            fill: false, // keep chart body white
           },
         ],
       },
@@ -181,25 +184,25 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
           y: {
             beginAtZero: false,
             ticks: {
-              color: 'rgb(156, 163, 175)',
+              color: 'rgb(0, 0, 0)',
               callback: function (value: number | string) {
                 return '$' + value.toLocaleString();
               },
             },
-            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            grid: { color: 'rgba(0, 0, 0, 0.1)' },
           },
           x: {
-            ticks: { color: 'rgb(156, 163, 175)', maxRotation: 0, autoSkip: true, maxTicksLimit: 10 },
-            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: 'rgb(0, 0, 0)', maxRotation: 0, autoSkip: true, maxTicksLimit: 10 },
+            grid: { color: 'rgba(0, 0, 0, 0.1)' },
           },
         },
         plugins: {
-          legend: { labels: { color: 'rgb(209, 213, 219)' } },
+          legend: { labels: { color: 'rgb(0, 0, 0)' } },
           tooltip: {
-            backgroundColor: 'rgb(31, 41, 55)',
-            titleColor: 'rgb(209, 213, 219)',
-            bodyColor: 'rgb(209, 213, 219)',
-            borderColor: 'rgb(34, 211, 238)',
+            backgroundColor: '#FFFFFF',
+            titleColor: '#000000',
+            bodyColor: '#000000',
+            borderColor: 'rgb(34, 197, 94)',
             borderWidth: 1,
             callbacks: {
               label: function (context: any) {
@@ -237,7 +240,7 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
           gap: '16px',
         }}
       >
-        <h3 style={{ margin: 0, color: 'black' }}>📈 Stock Market Visualizer</h3>
+        <h3 style={{ margin: 0, color: 'black' }}>Stock Market Visualizer</h3>
 
         <button
           onClick={onSwitchToPDF}
@@ -259,7 +262,11 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
         >
           Back to PDF View
         </button>
+      
+      
+
       </div>
+     
 
       {message && (
         <div style={{ color: '#dbe4ea', marginTop: '-12px' }}>{message}</div>
@@ -278,7 +285,7 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
       >
         <div
           style={{
-            background: '#1A202C',
+            background: '#FFFFFF',
             borderRadius: '4px',
             overflow: 'hidden',
             boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
@@ -287,10 +294,11 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
           }}
         >
           <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-            <canvas id="stockChart" style={{ width: '100%', height: '100%' }}></canvas>
-          </div>
+            <canvas id="stockChart" style={{ width: '100%', height: '100%', backgroundColor: '#FFFFFF' }}></canvas>
+          
         </div>
       </div>
+    </div>
     </div>
   );
 }

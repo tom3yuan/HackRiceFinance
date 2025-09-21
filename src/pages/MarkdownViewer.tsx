@@ -11,17 +11,17 @@ export interface MarkdownViewerProps {
 }
 
 function extractFirstPage(val: string): number | null {
-  const cleaned = val.replace(/Page\s*/i, "").trim();
+    const cleaned = val.replace(/Page\s*/i, "").trim();
 
-  // Take the first comma segment
-  const firstSegment = cleaned.split(",")[0].trim();
+    // Take the first comma segment
+    const firstSegment = cleaned.split(",")[0].trim();
 
-  // Take the first part of that if it’s a dash-separated range
-  const firstPart = firstSegment.split("-")[0].trim();
+    // Take the first part of that if it’s a dash-separated range
+    const firstPart = firstSegment.split("-")[0].trim();
 
-  const pageNum = parseInt(firstPart, 10);
+    const pageNum = parseInt(firstPart, 10);
 
-  return isNaN(pageNum) ? null : pageNum;
+    return isNaN(pageNum) ? null : pageNum;
 }
 
 function logHast() {
@@ -69,7 +69,19 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ aiText, isLoading, goTo
                         console.log("🖱️ Go to page clicked:", pageNum);
                         goToPage(pageNum);
                     }}
-                    style={{ height: '12px' }}>
+                    style={{
+                        display: "inline-block",
+                        verticalAlign: "middle", // 👈 aligns to middle of surrounding text
+                        backgroundColor: "#90C96E",
+                        padding: "2px 6px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                        border: "none",
+                        cursor: "pointer",
+                        margin: "0 4px"
+                    }}
+                >
                     Go to {props.value || node.properties?.value}
                 </button>
             );

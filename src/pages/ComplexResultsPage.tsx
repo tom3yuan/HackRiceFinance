@@ -9,7 +9,6 @@ interface SwitchViewButtonProps {
   onSwitch: () => void;
 }
 
-alert("⚡ ComplexResultsPage ran!");
 const SwitchViewButton: React.FC<SwitchViewButtonProps> = ({ onSwitch }) => {
   return (
       <button

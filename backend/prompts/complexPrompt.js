@@ -19,8 +19,9 @@ Follow this exact structure and rules:
 3. If data is missing, explicitly say: "Not disclosed in 10-K."
 4. Always maintain the numbering and section headers.
 5. Keep the original title and all of the output in markdown format.
-6. For every page reference, put the page number in the markdown format of [Page X].
-7. Your response should exactly match the report requirements without any additional sentences. For instance, prevent things like “Here is your beginner-friendly investment summary report.”
+6. For every page reference, put the page number in the markdown format of [Page X]. If there are multiple pages to reference, put them separately like "[Page 1][Page 2][Page 5]".
+7. Make some key words or statistics bold.
+8. Your response should exactly match the report requirements without any additional sentences. For instance, prevent things like “Here is your beginner-friendly investment summary report.”
 
 
 ---

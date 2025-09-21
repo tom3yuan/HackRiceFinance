@@ -4,16 +4,7 @@ import type { Root } from "mdast";
 /**
  * A remark plugin that finds "Page X" references and turns them into custom AST nodes.
  */
-export const mdastHandlers = {
-  pageReference(h: any, node: any) {
-    return h(
-      node,
-      "pageReference",                    // 👈 tagName in HAST
-      { value: node.value },              // properties
-      [{ type: "text", value: node.value }] // children
-    );
-  }
-};
+
 
 export function pageReferencePlugin() {
     return (tree: Root) => {
@@ -21,7 +12,7 @@ export function pageReferencePlugin() {
             if (!parent || index === null) return;
 
 
-            const regex = /(Page\s*\d+(?:-\d+)?(?:\s*,\s*\d+)*)/g;
+            const regex =  /\[(Page\s*\d+(?:-\d+)?(?:\s*,\s*\d+(?:-\d+)?)*)\]/g;
             const text = String(node.value);
             console.log("🪵 Plugin checking text node:", text);
 
@@ -42,9 +33,9 @@ export function pageReferencePlugin() {
 
                 newNodes.push({
                     type: "pageReference",  // 👈 custom mdast node type
-                    value: match[0]
+                    value: match[1]
                 });
-                console.log("🌱 Created custom node:", match[0]);
+                console.log("🌱 Created custom node:", match[1]);
 
                 lastIndex = regex.lastIndex;
             }

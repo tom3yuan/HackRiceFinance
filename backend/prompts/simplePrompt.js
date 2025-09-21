@@ -7,7 +7,8 @@
  */
 export function buildSimplePromptFromText() {
   return `You are an AI financial analyst. 
-Read the company’s 10-K and provide a concise investor abstract that can be read in 5 minutes. Write only in JSON!
+Read the company’s 10-K and provide a concise investor abstract that can be read in 5 minutes. 
+For Concise “5 Sentences Decision” Abstract, write in easily readable paragraphs. Write only in JSON!
 Your response should exactly match the report requirements without any additional sentences. For instance, prevent things like “Here is your beginner-friendly investment summary report.”
 
 Follow this structure:
@@ -23,7 +24,7 @@ Get the Company Name and the Stock Code.
 **Probability**: Provide probability framing (e.g., “70% chance of moderate gain, 20% chance of stagnation, 10% chance of major loss, based on the 17 metrics”).
 
 —
-## Concise “5-Minute Decision” Abstract
+## Concise “5 Sentences Decision” Abstract
 Produce a short executive-style abstract that can be read in under 5 minutes.  
 Include:  
 1. **Decisive Investor Statement**: End with a clear stance: *Highly likely to gain / Neutral / Highly likely to lose*. 
