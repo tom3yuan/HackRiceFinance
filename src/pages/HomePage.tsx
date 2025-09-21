@@ -74,7 +74,8 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
     }
 
     return (
-        <div
+        <div className="animation">
+        <div 
             style={{
                 padding: "0px",
                 height: "100%",
@@ -91,26 +92,29 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
     justifyContent: "space-between", 
     gap: "16px" // optional spacing between items
 }}>
+    
     <h3 style={{ margin: 0, color: "black" }}>📄 Document Preview</h3>
 
     <button
         onClick={onSwitchtoPDF}
         style={{
-            padding: "10px 20px",
-            borderRadius: "99999px",
-            border: "none",
-            height: "35px",
-            background: "#6EB644", /* Tailwind cyan-400 */
-            color: "#1a202c", /* Tailwind gray-900 */
-            fontSize: "15px",
-            cursor: "pointer",
-            display: "flex", 
-            justifyContent: "center", 
-            alignItems: "center",
-            fontFamily: "'Poppins', sans-serif",
-
-            transition: "background-color 0.3s, transform 0.3s"
-        }}
+    padding: "10px 20px",
+    borderRadius: "99999px",
+    border: "none",
+    height: "35px",
+    background: "#6EB644",
+    color: "#1a202c",
+    fontSize: "15px",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "'Poppins', sans-serif",
+    transition: "background-color 0.3s, transform 0.2s",
+  }}
+  onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
+  onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >
         Go to Data Visualization
     </button>
@@ -125,7 +129,7 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
                     borderRadius: "5px",
                     padding: "10px",
                     background: "transparent",
-                    height: "65vh"
+                    height: "85vh"
                 }}
             >
                 <Document
@@ -171,6 +175,7 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
                     ))}
                 </Document>
             </div>
+        </div>
         </div>
     );
 }

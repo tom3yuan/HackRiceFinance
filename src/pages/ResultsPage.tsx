@@ -10,15 +10,20 @@ interface SwitchViewButtonProps {
 }
 const SwitchViewButton: React.FC<SwitchViewButtonProps> = ({ onSwitch }) => {
   return (
+    <div>
+    <h3 style={{ margin: 0, color: 'black' }}>Summary:</h3>
+
+
     <button
       onClick={onSwitch}
       className="switch-view-button"
       aria-label="Switch view"
     >
-      Go to complex view {/* Arrow Icon */}
+      Go to Complex View
     </button>
+    </div>
   );
-};
+}
 
 // ====================================================================
 // Updated ResultsPage component
@@ -49,8 +54,11 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
   }, [aiText, location.state]);
 
   return (
+    <div className="scroll-wrapper">
     <div className="results-container">
+      
       <div className="results-content">
+        
         <h2 className="results-title">RESULTS</h2>
 
         {isLoading ? (
@@ -103,7 +111,7 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
           <p>No results available.</p>
         )}
       </div>
-
+      </div>
       <SwitchViewButton onSwitch={onSwitch} />
     </div>
   );

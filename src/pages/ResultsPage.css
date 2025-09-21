@@ -28,13 +28,14 @@
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 2rem;
+  margin-top: 0rem;
   text-align: center;
   background: transparent;
   -webkit-background-clip: text;
   /* -webkit-text-fill-color: #404040 0%; */
   background-clip: text;
   /* text-fill-color: #404040 0%; */
-  text-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 /* --- AI Text Display Area (MODIFIED) --- */
@@ -44,7 +45,7 @@
   padding: 2rem;
   border-radius: 8px;
   white-space: pre-wrap;
-  border: 1px solid rgba(79, 172, 254, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 1rem;
   line-height: 1.6;
 
@@ -80,7 +81,7 @@
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
   .results-content {
-    padding: 1.5rem;
+    padding: 0.5rem;
     height: 60vh; /* Give a bit more height on smaller screens */
   }
   .results-title {
@@ -132,7 +133,7 @@
 /* Base card style */
 .probability-card {
   flex: 1;
-  min-width: 200px;
+  min-width: 165px;
   padding: 1.5rem;
   text-align: center;
   border-radius: 12px;
@@ -198,6 +199,7 @@
   align-items: center !important;       /* Vertically center text */
   justify-content: center !important;   /* Horizontally center text */
   font-size: 15px !important;
+  font-family: 'Poppins', sans-serif;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
@@ -205,7 +207,13 @@
   background-color: #218838; /* Darker green on hover */
   transform: scale(1.05);    /* Slightly enlarge on hover */
 }
-
+.scroll-wrapper {
+  height: 100vh;          /* full viewport height */
+  overflow: auto;  
+  margin-top: 50px;       /* scrollable */
+  padding: 20px;          /* space from edges */
+  box-sizing: border-box; /* ensures padding doesn’t cut into width */
+}
 .switch-view-button:active {
   background-color: #1e7e34; /* Even darker green when pressed */
   transform: scale(0.95);

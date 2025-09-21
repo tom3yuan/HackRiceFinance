@@ -135,6 +135,8 @@
   align-items: center !important;       /* Vertically center text */
   justify-content: center !important;   /* Horizontally center text */
   font-size: 15px !important;
+  font-family: 'Poppins', sans-serif;
+
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 

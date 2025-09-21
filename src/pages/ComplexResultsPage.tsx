@@ -12,15 +12,13 @@ interface SwitchViewButtonProps {
 alert("⚡ ComplexResultsPage ran!");
 const SwitchViewButton: React.FC<SwitchViewButtonProps> = ({ onSwitch }) => {
   return (
-    <div>
       <button
         onClick={onSwitch}
         className="switch-view-button"
         aria-label="Switch view"
       >
-        Go to simple view {/* Arrow Icon */}
+        Go to Simple View {/* Arrow Icon */}
       </button>
-    </div>
   );
 };
 
@@ -42,16 +40,16 @@ const ComplexResultsPage: React.FC<ComplexResultsPageProps> = ({
 }) => {
   console.log("➡️ Passing props to MarkdownViewer", { aiText, isLoading });
   return (
-    
+    <div className="scroll-wrapper">
+
     <div className="results-container">
       {/* ✅ This now correctly uses your imported MarkdownViewer */}
-      
       <MarkdownViewer 
         aiText={aiText} 
         isLoading={isLoading} 
         goToPage={goToPage}
       />
-
+      </div>
       <SwitchViewButton onSwitch={onSwitch} />
     </div>
   );
