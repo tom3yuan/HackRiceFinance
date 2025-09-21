@@ -19,8 +19,10 @@
   flex: 1; /* Take up a bit more space */
   padding: 2rem;
   background: #ffffff;
-  width: 50%;
+  width: 100%;
+  display: block;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Allow scrolling for long responses */
+  overflow-y: hidden;
+  overflow-x: hidden; /* Allow scrolling for long responses */
 }

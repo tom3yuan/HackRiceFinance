@@ -2,9 +2,10 @@
 
 /* --- Main Container & Background --- */
 .results-container {
-  color: black; /* pure white text everywhere by default */
+  color: rgb(0, 0, 0); /* pure white text everywhere by default */
   background: transparent;
   height: 100%;
+  padding: 50px;
   opacity: 0; /* start invisible */
   animation: fadeIn 0.3s ease forwards;
   font-family: 'Poppins', sans-serif;
@@ -81,7 +82,8 @@
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
   .results-content {
-    padding: 0.5rem;
+    padding: 2rem;
+    background-color: blue;
     height: 60vh; /* Give a bit more height on smaller screens */
   }
   .results-title {
@@ -208,9 +210,10 @@
   transform: scale(1.05);    /* Slightly enlarge on hover */
 }
 .scroll-wrapper {
-  height: 100vh;          /* full viewport height */
-  overflow: auto;  
-  margin-top: 50px;       /* scrollable */
+  height: 88vh;          /* full viewport height */
+  overflow-y: scroll;  
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;       /* scrollable */
   padding: 20px;          /* space from edges */
   box-sizing: border-box; /* ensures padding doesn’t cut into width */
 }

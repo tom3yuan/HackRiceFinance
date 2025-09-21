@@ -15,7 +15,7 @@ interface HomePageProps {
     file: File;
 }
 
-function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitchtoPDF }: HomePageProps) {
+function HomePage({ extractedData, file, onReady, onSwitchtoPDF }: HomePageProps) {
     const [numPages, setNumPages] = useState<number>(0);
     const [containerWidth, setContainerWidth] = useState<number>(600);
     const [showDataPage, setShowDataPage] = useState<boolean>(false); // State to toggle pages

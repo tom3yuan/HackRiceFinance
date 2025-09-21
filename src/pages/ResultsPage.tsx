@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './ResultsPage.css';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 // ====================================================================
 // SwitchViewButton component (no changes needed here)
@@ -38,6 +40,39 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
 
   const [parsedData, setParsedData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const exportPDF = () => {
+  const input = document.getElementById("results-to-pdf");
+  if (!input) return;
+
+  html2canvas(input, { scale: 2 }).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgWidth = pdfWidth;
+    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // Add the first page
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+
+    // Add extra pages if content overflows
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight; // calculate position for the next chunk
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+    }
+
+    pdf.save("results.pdf");
+  });
+};
 
   useEffect(() => {
     try {
@@ -54,8 +89,9 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
 
   return (
     <div className="scroll-wrapper">
+    <div id="results-to-pdf" className="results-container">
+
       
-    <div className="results-container">
 
       <div className="results-content">
         
@@ -80,6 +116,7 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
 
             <section>
               <h3>🎯 Probability of Gain or Loss</h3>
+              <div>
               <div className="probability-cards">
                 {/* Gain */}
                 <div className="probability-card gain">
@@ -99,6 +136,7 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
                   <p>{parsedData.Probability?.Loss_Probability || "N/A"}</p>
                 </div>
               </div>
+              </div>
               <p><strong>Statement:</strong> {parsedData.Probability?.Probability_Statement}</p>
             </section>
 
@@ -116,6 +154,9 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
 
       <SwitchViewButton onSwitch={onSwitch} />
       </div>
+    <button onClick={exportPDF} className="export-pdf-button">
+  Export as PDF
+</button>
     </div>
   );
 }

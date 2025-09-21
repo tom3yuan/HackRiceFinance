@@ -18,6 +18,7 @@
       <button id="explain-action" role="menuitem" type="button" style="
         min-width:120px;padding:8px 12px;border:1px solid #ddd;border-radius:8px;
         background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.12);cursor:pointer;
+        color:#000;
       ">Explain</button>
     </div>
 
@@ -152,13 +153,49 @@
             console.error(err);
             return;
           }
-          const data = await res.json();
-          updatePopover(data.explanation || data.text || 'No explanation returned.');
-        } catch (err) {
-          updatePopover('Network error while contacting the explainer service.');
-          console.error(err);
-        }
-      }
+          // Accept either a JSON object or a plain string response
+          let data;
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            data = await res.json();
+          } else {
+            // fallback to plain-text body (some server responses may return a raw string)
+            data = await res.text();
+          }
+
+          console.log('explain response:', data);
+
+          // Normalize to a single explanation string
+          let explanation = 'No explanation returned.';
+          if (typeof data === 'string') {
+            explanation = data;
+          } else if (data && typeof data === 'object') {
+            explanation = data.explanation || data.text || JSON.stringify(data) || explanation;
+          }
+
+          // If we somehow lost the saved range (clicking the button can remove the active selection),
+          // try to re-acquire the current selection as a fallback.
+          if (!lastRange) {
+            const selInfo = getSelectionInfo();
+            lastRange = selInfo.range;
+          }
+
+          // Reposition and show the popover now that we have the explanation text.
+          if (lastRange) {
+            showPopoverAtRange(lastRange, explanation);
+          } else {
+            // As a last resort, show centered near the viewport top.
+            popover.style.left = `${window.scrollX + 16}px`;
+            popover.style.top = `${window.scrollY + 80}px`;
+            popover.style.display = 'block';
+            popover.setAttribute('aria-hidden', 'false');
+            updatePopover(explanation);
+          }
+         } catch (err) {
+           updatePopover('Network error while contacting the explainer service.');
+           console.error(err);
+         }
+       }
     })();
     </script>
 

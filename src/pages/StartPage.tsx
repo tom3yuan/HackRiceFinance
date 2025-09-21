@@ -1,8 +1,7 @@
 // src/pages/StartPage.tsx
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FileUpload } from '../components/FileUpload'; // Make sure this path is correct
+import { useNavigate } from 'react-router-dom'; // Make sure this path is correct
 import './MasterCSS.css'
 import './LandingPage.css'; // You can reuse your landing page styles
 

@@ -9,9 +9,9 @@ import DataPage from '../pages/DataPage';
 
 function GeneratorLayout() {
   const location = useLocation();
-  const { extractedData, extractedLongData, file1 } = location.state || {};
+  const { extractedData, extractedLongData } = location.state || {};
   const initialFile = location.state?.file || location.state?.file1;
-  const [file, setFile] = useState<File | null>(() => initialFile);
+  const [file, _setFile] = useState<File | null>(() => initialFile);
   if (!extractedData || !file) {
     return <Navigate to="/" replace />;
   }
@@ -20,7 +20,7 @@ function GeneratorLayout() {
   // Convert the extractedData object into a readable string for display
   const initialText = JSON.stringify(extractedData, null, 2);
   const [goToPageFn, setGoToPageFn] = useState<(pageNum: number) => void>(() => () => {});
-  const [aiText, setAiText] = useState(initialText);
+  const [_aiText, setAiText] = useState(initialText);
   const [isLoading, setIsLoading] = useState(false);
   const [rightPanelView, setRightPanelView] = useState<'simple' | 'complex'>('simple');
   const [leftPanelView, setLeftPanelView] = useState<'pdf' | 'visual'>('pdf');
@@ -85,8 +85,9 @@ function GeneratorLayout() {
         )}
         
       </div>
+      
       <div className="right-panel">
-                        <h3 style={{ margin: 0, color: 'black' }}>Summary</h3>
+        <h3 style={{ margin: 0, color: "black" }}>Summary</h3>
 
         {rightPanelView === 'simple' ? (
           <ResultsPage 

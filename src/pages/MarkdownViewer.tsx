@@ -24,40 +24,11 @@ function extractFirstPage(val: string): number | null {
     return isNaN(pageNum) ? null : pageNum;
 }
 
-function logHast() {
-    return (tree: any) => {
-        console.log("🌐 HAST after remark→rehype:", JSON.stringify(tree, null, 2));
-    };
-}
-
 const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ aiText, isLoading, goToPage }) => {
     console.log("👀 MarkdownViewer mounted. isLoading:", isLoading, "aiText:", aiText);
 
     if (isLoading) return <div>Loading...</div>;
 
-    const renderPageButtons = (pageString: string) => {
-        console.log("🔗 renderPageButtons input:", pageString);
-
-        const pageNumbers = pageString
-            .replace(/Page\s*/g, "")
-            .split(",")
-            .map((s) => s.trim());
-
-        console.log("➡️ Parsed pageNumbers:", pageNumbers);
-
-        return pageNumbers.map((numStr, i) => (
-            <button
-                key={i}
-                onClick={() => {
-                    console.log("🖱️ Go to page clicked:", numStr);
-                    goToPage(Number(numStr));
-                }}
-                style={{ margin: '0 2px' }}
-            >
-                {`Page ${numStr}`}
-            </button>
-        ));
-    };
     const components = {
         pageReference: ({ node, children, ...props }: any) => {
             console.log("🎨 Rendering <pageReference>", { node, props, children });
@@ -67,7 +38,9 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ aiText, isLoading, goTo
                         const val = (props.value || node.properties?.value || "") as string;
                         const pageNum = extractFirstPage(val);
                         console.log("🖱️ Go to page clicked:", pageNum);
-                        goToPage(pageNum);
+                        if (pageNum !== null) {
+                            goToPage(pageNum);
+                        }
                     }}
                     style={{
                         display: "inline-block",
@@ -95,7 +68,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ aiText, isLoading, goTo
                 passThrough: ["pageReference"],
             }}
             rehypePlugins={[rehypePageReference]} // 👈 log the HAST
-            components={components}
+            components={components as any}
         >
             {aiText}
         </ReactMarkdown>

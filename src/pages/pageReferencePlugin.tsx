@@ -1,4 +1,4 @@
-import { visit } from "unist-util-visit";
+import { visit, SKIP } from "unist-util-visit";
 import type { Root } from "mdast";
 
 /**
@@ -10,8 +10,6 @@ export function pageReferencePlugin() {
     return (tree: Root) => {
         visit(tree, "text", (node, index, parent) => {
             if (!parent || index === null) return;
-
-
             const regex =  /\[(Page\s*\d+(?:-\d+)?(?:\s*,\s*\d+(?:-\d+)?)*)\]/g;
             const text = String(node.value);
             console.log("🪵 Plugin checking text node:", text);
@@ -45,8 +43,10 @@ export function pageReferencePlugin() {
             }
 
             if (newNodes.length > 0) {
-                parent.children.splice(index, 1, ...newNodes);
-                return [visit.SKIP, index + newNodes.length];
+                if (typeof index === 'number') {
+                    parent.children.splice(index, 1, ...newNodes);
+                }
+                return [SKIP, index! + newNodes.length];
             }
         });
         console.log("🌳 MDAST after plugin:", JSON.stringify(tree, null, 2));

@@ -13,6 +13,8 @@
     "@google/genai": "^1.20.0",
     "chart.js": "^4.5.0",
     "dotenv": "^17.2.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
     "multer": "^2.0.2",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.3.93",
@@ -21,6 +23,7 @@
     "react-markdown": "^10.1.0",
     "react-pdf": "^10.1.0",
     "react-router-dom": "^7.9.1",
+    "react-tooltip": "^5.29.1",
     "showdown": "^2.1.0",
     "tailwindcss": "^4.1.13",
     "unist-builder": "^4.0.0"
