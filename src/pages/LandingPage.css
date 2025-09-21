@@ -1,16 +1,13 @@
-/* src/pages/LandingPage.css */
-
-/* --- Main Container & Background --- */
+/* --- Main Container --- */
 .landing-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full screen height */
-  width: 100vw; /* Full screen width */
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-  color: white;
-  font-family: 'Poppins', sans-serif; /* A nice, clean font */
-  overflow: hidden; /* Hide any overflow */
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffffff 100%);
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
   animation: fadeIn 1.5s ease-in-out;
 }
 
@@ -18,84 +15,136 @@
   text-align: center;
 }
 
-/* --- Title Styling --- */
+/* --- Titles --- */
 .landing-title {
-  font-size: 5rem; /* Large and impactful */
+  font-size: 5rem;
   font-weight: 700;
-  letter-spacing: 4px; /* Gives it a bit of air */
+  letter-spacing: 4px;
   margin-bottom: 2rem;
-  
-  /* The cool gradient text effect */
-  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(90deg, #85BB65 0%, #85BB65 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-
-  /* Subtle text shadow for depth */
-  text-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
 }
 
-/* --- Start Button Styling --- */
+.landing-subtitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.75px;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, #85BB65 0%, #85BB65 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Uploader --- */
+.uploader-section {
+  margin-top: 20px;
+}
+
+/* hide native input */
+.file-input {
+  display: none;
+}
+
+/* pretty upload button */
+.upload-button {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  padding: 0.8rem 2.5rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #85BB65 0%, #6EB644 100%);
+  box-shadow: 0 0 15px #90C96E;
+  transition: all 0.3s ease-in-out;
+  animation: pulse 2s infinite;
+  display: inline-block;
+}
+
+.upload-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px #B2DA9B;
+  animation-play-state: paused;
+}
+
+/* --- Loading Indicator --- */
+.loading-indicator {
+  font-size: 1rem;
+  color: #005eff;
+  padding: 12px 20px;
+  background-color: #edf2f7;
+  border-radius: 5px;
+}
+
+/* --- Start Button (matches upload) --- */
 .start-button {
   font-family: 'Poppins', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   color: white;
   padding: 1rem 3rem;
-  border-radius: 50px; /* Pill shape */
+  border-radius: 50px;
   border: none;
   cursor: pointer;
-  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-  box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-  
-  /* Smooth transition for hover effects */
+  background: linear-gradient(90deg, #85BB65 0%, #6EB644 100%);
+  box-shadow: 0 0 20px #6EB644;
   transition: all 0.3s ease-in-out;
-
-  /* The 'breathing' animation */
   animation: pulse 2s infinite;
 }
 
-/* --- Button Hover Effect --- */
 .start-button:hover {
-  transform: scale(1.05); /* Slightly enlarge the button */
-  box-shadow: 0 0 35px rgba(0, 242, 254, 0.7);
-  animation-play-state: paused; /* Stop pulsing on hover */
+  transform: scale(1.05);
+  box-shadow: 0 0 35px #B2DA9B;
+  animation-play-state: paused;
 }
 
-
-/* --- Keyframe Animations --- */
-
-/* For the whole page fading in */
+/* --- Animations --- */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-/* For the button's 'breathing' glow */
 @keyframes pulse {
-  0% {
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-  }
+  0%   { box-shadow: 0 0 20px #90C96E; }
+  50%  { box-shadow: 0 0 30px #B2DA9B; }
+  100% { box-shadow: 0 0 20px #90C96E; }
 }
 
-/* --- Responsive Design for Smaller Screens --- */
+/* --- Responsive --- */
 @media (max-width: 768px) {
-  .landing-title {
-    font-size: 3rem;
+  .landing-title { font-size: 3rem; }
+  .start-button, .upload-button {
+    font-size: 1rem;
+    padding: 0.6rem 2rem;
   }
-  .start-button {
-    font-size: 1.2rem;
-    padding: 0.8rem 2.5rem;
-  }
+}
+.loading-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0;
+  background-color: #4caf50;
+  border-radius: 10px;
+  animation: neverFinish 10s forwards;
+}
+
+/* Keyframes for loading animation */
+@keyframes neverFinish {
+  0% { width: 0%; }
+  50% { width: 70%; }    /* Fast start */
+  80% { width: 90%; }    /* Start slowing down */
+  90% { width: 95%; }    /* Very slow */
+  95% { width: 96%; }    /* Extremely slow */
+  96% { width: 97%; }    /* Almost there */
+  98% { width: 98%; }    /* Approaching final percent */
+  99% { width: 99%; }
+  100% { width: 99.5%; }  /* Crawling to finish */
 }

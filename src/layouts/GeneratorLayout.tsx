@@ -5,21 +5,32 @@ import HomePage from '../pages/HomePage';
 import ResultsPage from '../pages/ResultsPage';
 import ComplexResultsPage from '../pages/ComplexResultsPage';
 import './GeneratorLayout.css';
+import DataPage from '../pages/DataPage';
 
 function GeneratorLayout() {
   const location = useLocation();
-  const extractedData = location.state?.extractedData;
-  const file = location.state?.file;
+  const { extractedData, extractedLongData, file1 } = location.state || {};
+  const initialFile = location.state?.file || location.state?.file1;
+  const [file, setFile] = useState<File | null>(() => initialFile);
+  if (!extractedData || !file) {
+    return <Navigate to="/" replace />;
+  }
 
-  // --- FIX 1: Initialize the aiText state with the extractedData ---
-  // The fallback text is for safety, but the redirect should prevent it from being seen.
-  const [aiText, setAiText] = useState(extractedData || "Your generated content will appear here...");
-  
+  // --- CORRECTED STATE INITIALIZATION ---
+  // Convert the extractedData object into a readable string for display
+  const initialText = JSON.stringify(extractedData, null, 2);
+  const [goToPageFn, setGoToPageFn] = useState<(pageNum: number) => void>(() => () => {});
+  const [aiText, setAiText] = useState(initialText);
   const [isLoading, setIsLoading] = useState(false);
   const [rightPanelView, setRightPanelView] = useState<'simple' | 'complex'>('simple');
+  const [leftPanelView, setLeftPanelView] = useState<'pdf' | 'visual'>('pdf');
 
   const handleViewSwitch = () => {
     setRightPanelView(currentView => currentView === 'simple' ? 'complex' : 'simple');
+  };
+
+  const handlePDFSwitch = () => {
+    setLeftPanelView(currentView => currentView === 'pdf' ? 'visual' : 'pdf');
   };
   
   const handleGenerate = async (prompt: string) => {
@@ -29,6 +40,7 @@ function GeneratorLayout() {
     }
 
     setRightPanelView('simple'); 
+    setLeftPanelView('pdf'); 
     setIsLoading(true);
     setAiText("Generating...");
 
@@ -38,8 +50,14 @@ function GeneratorLayout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: prompt }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
       const data = await response.json();
-      setAiText(data.generatedText); 
+      // Ensure the response from /generate is also a string
+      setAiText(data.generatedText || "Response did not contain generatedText."); 
     } catch (error) {
       console.error("Error fetching AI content:", error);
       setAiText("Failed to get response from AI. Please check the console.");
@@ -48,33 +66,38 @@ function GeneratorLayout() {
     }
   };
 
-  if (!extractedData || !file) {
-    return <Navigate to="/" replace />;
-  }
-
   return (
     <div className="generator-container">
       <div className="left-panel">
-        <HomePage 
+        {leftPanelView === 'pdf' ? (
+          <HomePage 
           onGenerate={handleGenerate} 
           isLoading={isLoading}
           extractedData={extractedData}
           file={file}
+          onReady={(fn) => setGoToPageFn(() => fn)}
+          onSwitchtoPDF={handlePDFSwitch}
         />
+        ) : (
+          <DataPage
+          onSwitchToPDF={handlePDFSwitch}
+          />
+        )}
+        
       </div>
       <div className="right-panel">
-        {/* --- FIX 2: Use conditional rendering to show only one view at a time --- */}
         {rightPanelView === 'simple' ? (
           <ResultsPage 
             onSwitch={handleViewSwitch}
-            aiText={aiText} // Pass the correct state variable
+            aiText={extractedData}
             isLoading={isLoading}
           />
         ) : (
           <ComplexResultsPage 
             onSwitch={handleViewSwitch} 
-            aiText={aiText} // Pass the correct state variable
+            aiText={extractedLongData}
             isLoading={isLoading}
+            goToPage={goToPageFn}
           />
         )}
       </div>

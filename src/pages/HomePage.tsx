@@ -1,88 +1,174 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import DataPage from "./DataPage"; // Import DataPage for toggling
 
+// Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 
 interface HomePageProps {
-  onGenerate: (prompt: string) => void;
-  isLoading: boolean;
-  extractedData: any;
-  file: File;
+    onGenerate: (prompt: string) => void;
+    onReady?: (goToPage: (pageNum: number) => void) => void; // external hook to control page scroll
+    isLoading: boolean;
+    extractedData: any;
+    onSwitchtoPDF: () => void;
+    file: File;
 }
 
-function HomePage({ onGenerate, isLoading, extractedData, file }: HomePageProps) {
-  const [numPages, setNumPages] = useState<number>(0);
-  const [prompt, setPrompt] = useState("");
+function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitchtoPDF }: HomePageProps) {
+    const [numPages, setNumPages] = useState<number>(0);
+    const [containerWidth, setContainerWidth] = useState<number>(600);
+    const [showDataPage, setShowDataPage] = useState<boolean>(false); // State to toggle pages
+    const containerRef = useRef<HTMLDivElement>(null);
+    const pageRefs = useRef<HTMLDivElement[]>([]);
 
-  const handleLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
-  };
+    // Function to scroll to a specific page
+    const goToPage = useCallback((pageNum: number) => {
+        const pageEl = pageRefs.current[pageNum - 1];
+        if (pageEl) {
+            pageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, []);
 
-  const handleSubmit = () => {
-    const fullPrompt = `Based on: ${JSON.stringify(extractedData)}, please do: ${prompt}`;
-    onGenerate(fullPrompt);
-  };
+    // Expose goToPage to parent via onReady
+    useEffect(() => {
+        if (onReady) {
+            onReady(goToPage);
+        }
+    }, [onReady, numPages, goToPage]);
 
-  return (
-    <div style={{ padding: "20px", height: "100%", display: "flex", flexDirection: "column" }}>
-      <h3 style={{ marginBottom: "10px" }}>Document Preview</h3>
-      
-      {/* 👇 scrollable PDF container */}
-      <div 
-        style={{ 
-          flexGrow: 1,
-          overflowY: "auto", 
-          border: "1px solid #4A5568", 
-          borderRadius: "8px", 
-          padding: "10px",
-          background: "#1A202C"
-        }}
-      >
-        <Document
-          file={file}
-          onLoadSuccess={handleLoadSuccess}
-          loading="Loading PDF preview..."
-          error="Failed to load PDF preview."
-        >
-          {Array.from(new Array(numPages), (el, index) => (
-            <Page
-              key={`page_${index + 1}`}
-              pageNumber={index + 1}
-              width={600} // you can set to container width dynamically
-              renderTextLayer={false} // prevents overlayed raw text
-              renderAnnotationLayer={false}
+    // Handle container resize for responsive PDF scaling
+    useEffect(() => {
+        function handleResize() {
+            if (containerRef.current) {
+                setContainerWidth(containerRef.current.offsetWidth);
+            }
+        }
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const handleLoadSuccess = ({ numPages }: { numPages: number }) => {
+        setNumPages(numPages);
+        pageRefs.current = new Array(numPages); // reset refs array
+    };
+
+    // Persist parsed data so DataPage can pick it up as a fallback
+    useEffect(() => {
+        if (extractedData) {
+            try {
+                localStorage.setItem('parsedData', JSON.stringify(extractedData));
+            } catch {}
+        }
+    }, [extractedData]);
+
+    // When switching to the DataPage view, pass the extracted company code directly
+    if (showDataPage) {
+        return (
+            <DataPage
+                onSwitchToPDF={() => setShowDataPage(false)}
+                companyCode={extractedData?.Company_Info?.Company_Code}
             />
-          ))}
-        </Document>
-      </div>
+        ); // Render DataPage
+    }
 
-      <div className="prompt-section" style={{ marginTop: "20px" }}>
-        <h3 style={{ marginBottom: "10px" }}>Your Prompt</h3>
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Enter prompt"
-          style={{
-            width: "100%",
-            minHeight: "100px",
-            backgroundColor: "#2D3748",
-            color: "#E2E8F0",
-            border: "1px solid #4A5568",
-            borderRadius: "8px",
-            padding: "10px"
-          }}
-        />
-        <button
-          onClick={handleSubmit}
-          disabled={isLoading}
-          style={{ marginTop: "10px" }}
+    return (
+        <div
+            style={{
+                padding: "20px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+                background: "transparent",
+                color: "white"
+            }}
         >
-          {isLoading ? "Generating..." : "Generate Response"}
-        </button>
-      </div>
-    </div>
-  );
+            <div style={{ 
+    display: "flex", 
+    alignItems: "center", 
+    justifyContent: "space-between", 
+    gap: "16px" // optional spacing between items
+}}>
+    <h3 style={{ margin: 0, color: "black" }}>📄 Document Preview</h3>
+
+    <button
+        onClick={onSwitchtoPDF}
+        style={{
+            padding: "10px 20px",
+            borderRadius: "99999px",
+            border: "none",
+            height: "35px",
+            background: "#6EB644", /* Tailwind cyan-400 */
+            color: "#1a202c", /* Tailwind gray-900 */
+            fontWeight: "bold",
+            fontSize: "15px",
+            cursor: "pointer",
+            transition: "background-color 0.3s, transform 0.3s"
+        }}
+    >
+        Go to Data Visualization
+    </button>
+</div>
+            {/* Scrollable PDF Preview */}
+            <div
+                ref={containerRef}
+                style={{
+                    flexGrow: 1,
+                    overflowY: "auto",
+                    border: "1px solid #4A5568",
+                    borderRadius: "5px",
+                    padding: "10px",
+                    background: "transparent",
+                    height: "65vh"
+                }}
+            >
+                <Document
+                    file={file}
+                    onLoadSuccess={handleLoadSuccess}
+                    loading={
+                        <div style={{ textAlign: "center", color: "white" }}>⌛ Loading PDF...</div>
+                    }
+                    error={
+                        <div style={{ textAlign: "center", color: "red" }}>
+                            ⚠️ Failed to load PDF preview
+                        </div>
+                    }
+                >
+                    {Array.from(new Array(numPages), (_, index) => (
+                        <div
+                            key={`page_${index + 1}`}
+                            ref={(el) => {
+                                if (el) pageRefs.current[index] = el;
+                            }}
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                marginBottom: "10px"
+                            }}
+                        >
+                            <div
+                                style={{
+                                    background: "#1A202C",
+                                    borderRadius: "4px",
+                                    overflow: "hidden",
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.5)"
+                                }}
+                            >
+                                <Page
+                                    pageNumber={index + 1} // ✅ Render each actual page (not only current pageNumber)
+                                    width={containerWidth - 60}
+                                    renderTextLayer={false}
+                                    renderAnnotationLayer={false}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </Document>
+            </div>
+        </div>
+    );
 }
 
 export default HomePage;

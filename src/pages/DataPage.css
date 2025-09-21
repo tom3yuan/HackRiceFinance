@@ -1,0 +1,112 @@
+/* DataPage.css */
+
+.data-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: transparent; 
+  color: #e2e8f0; /* Tailwind gray-300 */
+  min-height: 100vh;
+}
+
+.data-page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.data-page-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #38bdf8; /* Tailwind cyan-400 */
+}
+
+.data-page-subtitle {
+  font-size: 1rem;
+  color: #94a3b8; /* Tailwind gray-400 */
+}
+
+.data-page-input {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.data-page-stock-input {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  border: 2px solid #475569; /* Tailwind gray-600 */
+  border-radius: 0.5rem;
+  background-color: #334155; /* Tailwind gray-700 */
+  color: #e2e8f0; /* Tailwind gray-300 */
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.data-page-stock-input:focus {
+  border-color: #38bdf8; /* Tailwind cyan-400 */
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
+}
+
+.data-page-fetch-button {
+  padding: 0.5rem 1.5rem;
+  background-color: #38bdf8; /* Tailwind cyan-400 */
+  color: #1a202c; /* Tailwind gray-900 */
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.data-page-fetch-button:hover {
+  background-color: #0ea5e9; /* Tailwind cyan-500 */
+  transform: scale(1.05);
+}
+
+.data-page-fetch-button:disabled {
+  background-color: #94a3b8; /* Tailwind gray-400 */
+  cursor: not-allowed;
+}
+
+.data-page-message {
+  height: 1.5rem;
+  color: #facc15; /* Tailwind yellow-400 */
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.data-page-chart {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  background-color: #1e293b; /* Tailwind gray-800 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.data-page-footer {
+  display: none; /* Hide the footer */
+}
+
+.data-page-switch-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem; /* Move to the left */
+  padding: 0.5rem 1rem;
+  background-color: #ffffff; /* Change background to white */
+  color: #1a202c; /* Tailwind gray-900 */
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.data-page-switch-button:hover {
+  background-color: #e2e8f0; /* Light gray hover effect */
+  transform: scale(1.05);
+}

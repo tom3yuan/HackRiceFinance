@@ -2,13 +2,24 @@
 
 /* --- Main Container & Background --- */
 .results-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* Ensures it fills the parent panel */
-  font-family: 'Poppins', sans-serif; /* Consistent font with landing page */
-  animation: fadeIn 0.5s ease-in-out; /* A subtle fade-in effect */
+  color: black; /* pure white text everywhere by default */
+  background: transparent;
+  height: 100%;
+  opacity: 0; /* start invisible */
+  animation: fadeIn 0.3s ease forwards;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased; /* For Chrome, Safari, etc. on macOS */
+  text-rendering: optimizeLegibility; /* improve clarity across browsers */
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 /* --- Content Wrapper (MODIFIED) --- */
 
 
@@ -18,18 +29,18 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  background: linear-gradient(90deg, #404040 0%, #515151 100%);
+  background: transparent;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* -webkit-text-fill-color: #404040 0%; */
   background-clip: text;
-  text-fill-color: transparent;
+  /* text-fill-color: #404040 0%; */
   text-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
 }
 
 /* --- AI Text Display Area (MODIFIED) --- */
 .ai-text-area {
-  background: #ffffff; /* Reverted to dark theme background for readability */
-  color: #313131;
+  background: transparent; /* Reverted to dark theme background for readability */
+  color: black;
   padding: 2rem;
   border-radius: 8px;
   white-space: pre-wrap;
@@ -48,40 +59,13 @@
 
 /* --- Loading State Styling --- */
 .loading-text {
-  color: #000000;
+  color: black;
   font-size: 1.2rem;
   text-align: center;
   animation: blinker 1.5s linear infinite;
 }
 
 /* --- Switch View Button --- */
-.switch-view-button {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 10;
-  padding: 0.8rem;
-  width: 50px;
-  height: 50px;
-  font-size: 1.5rem;
-  color: white;
-  background: linear-gradient(90deg, #000000 0%, #000000 100%);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(89, 89, 89, 0.4);
-  transition: all 0.3s ease-in-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.switch-view-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
-}
-
-
 /* --- Keyframe Animations --- */
 
 @keyframes fadeIn {
@@ -112,4 +96,117 @@
     height: 40px;
     font-size: 1.2rem;
   }
+  
+}
+/* --- Probability Section --- */
+.probability-section {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: green; /* white card background */
+  color: #1a1a1a;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.probability-section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.probability-statement {
+  font-style: italic;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #4a5568;
+}
+
+/* Cards container */
+.probability-cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Base card style */
+.probability-card {
+  flex: 1;
+  min-width: 200px;
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.probability-card h4 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Gain Card */
+.probability-card.gain {
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+}
+.probability-card.gain h4,
+.probability-card.gain p {
+  color: #2f855a;
+}
+.probability-card.gain p {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Neutral Card */
+.probability-card.neutral {
+  background: #fffbf0;
+  border: 1px solid #f6e05e;
+}
+.probability-card.neutral h4,
+.probability-card.neutral p {
+  color: #975a16;
+}
+.probability-card.neutral p {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Loss Card */
+.probability-card.loss {
+  background: #fff5f5;
+  border: 1px solid #fc8181;
+}
+.probability-card.loss h4,
+.probability-card.loss p {
+  color: #c53030;
+}
+.probability-card.loss p {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.switch-view-button {
+  background-color: #6EB644 !important;/* Green color */
+  color: white;             /* Text color */
+  border: none;
+  border-radius: 99999px !important;       /* Slightly rounded corners */
+  padding: 10px 20px !important;       /* Adjust padding as needed */
+  cursor: pointer;
+  width: 120px !important;
+  height: 35px !important;
+  align-items: center !important;       /* Vertically center text */
+  justify-content: center !important;   /* Horizontally center text */
+  font-size: 15px !important;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.switch-view-button:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05);    /* Slightly enlarge on hover */
+}
+
+.switch-view-button:active {
+  background-color: #1e7e34; /* Even darker green when pressed */
+  transform: scale(0.95);
 }

@@ -126,7 +126,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, accept }) 
         Click to upload or drag and drop
       </p>
       <p style={{ margin: '4px 0 0', fontSize: '0.8rem' }}>
-        PDF, TXT, MD, or JSON (MAX. 10MB)
+        PDF File (MAX. 10MB)
       </p>
     </div>
   );

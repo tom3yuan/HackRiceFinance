@@ -5,6 +5,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import multer from "multer";
+import { buildSimplePromptFromText } from './prompts/simplePrompt.js';
+import { buildComplexPromptFromText } from "./prompts/complexPrompt.js";
+
 
 dotenv.config();
 const app = express();
@@ -18,55 +21,164 @@ const upload = multer({ storage: storage });
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-app.post("/extract", upload.single('file'), async (req, res) => {
+const fileToBase64 = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result.split(',')[1]);
+  reader.onerror = error => reject(error);
+});
+
+
+/*
+Simple Extract
+Goal: Extract company name, company code, short description etc. 
+*/
+app.post("/simple-extract", upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file was uploaded." });
     }
 
-    const textToAnalyze = req.file.buffer.toString("utf-8");
+    const base64Data = req.file.buffer.toString('base64');
+    const systemPrompt = buildSimplePromptFromText();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `
-      Extract the key information from the following text.
-      Respond ONLY with a valid JSON object and nothing else.
-      Do not include markdown fences like \`\`\`json, introductory text, or explanations.
-      The text is:
-      """
-      ${textToAnalyze}
-      """
-    `;
+    const schema = {
+      type: "OBJECT",
+      properties: {
+        Company_Info: {
+          type: "OBJECT",
+            properties: {
+              Company_Name: { type: "STRING" },
+              Company_Code: { type: "STRING" }
+            },
+            required: ["Company_Name", "Company_Code"]
+          },
+          Probability: {
+            type: "OBJECT",
+            properties: {
+              Gain_Probability: { type: "STRING" },
+              Neutral_Probability: { type: "STRING" },
+              Loss_Probability: { type: "STRING" },
+              Probability_Statement: { type: "STRING" }
+            },
+            required: ["Gain_Probability", "Neutral_Probability", "Loss_Probability", "Probability_Statement"]
+          },
+          Concise_5_Minute_Decision: { type: "STRING" }
+        },
+      required: ["Company_Info", "Probability", "Concise_5_Minute_Decision"]
+    };
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const rawText = response.text();
-    console.log("AI Raw Response Text:", rawText);
+    const payload = {
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: "" },
+              {
+                inlineData: 
+                {
+                  mimeType: "application/pdf",
+                  data: base64Data
+                }
+              }
+            ]
+          }
+      ],
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema
+      }
+    }
+    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-    // --- CHANGE 1: Cleaned up JSON parsing ---
-    // Instead of manually finding brackets, we'll try to parse it directly.
-    // This is more robust and will throw an error if the AI's response
-    // is not a perfectly formatted JSON string.
-    try {
-      const parsedJson = JSON.parse(rawText);
-      res.json(parsedJson); // Send the parsed JSON object
-    } catch (parseError) {
-      // This catch block runs if JSON.parse fails.
-      console.error("Failed to parse AI response as JSON:", parseError);
-      // We send the raw text to the frontend so the user can see what the AI returned.
-      res.status(200).send(rawText);
+    const response = await fetch(apiUrl, {
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if(!response.ok) {
+      const errorBody = await response.json();
+      console.error("API error Response:", errorBody);
+      throw new Error(`API request failed with status ${response.status}: ${errorBody.error?.message || 'Unknown error'}`);
     }
 
+    const result = await response.json();
+    const textContent = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (textContent) {
+      res.status(200).json(textContent);
+    } else {
+      console.error("Unexpected API response structure:", result);
+      throw new Error("Failed to get a valid response from the API.");
+    }
   } catch (error) {
-    // --- CHANGE 2: Improved Error Logging ---
-    console.error("Error in /extract endpoint:", error);
+    console.error("Error in /simple-extract endpoint:", error);
     res.status(500).json({ error: "An internal server error occurred." });
   }
 });
 
+app.post("/complex-extract", upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file was uploaded." });
+    }
 
+    const base64Data = req.file.buffer.toString('base64');
+    const systemPrompt = buildComplexPromptFromText();
 
-app.post("/generate", async (req, res) => {
-    // ... your existing /generate code
+    const payload = {
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: "" },
+              {
+                inlineData: 
+                {
+                  mimeType: "application/pdf",
+                  data: base64Data
+                }
+              }
+            ]
+          }
+      ],
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+    }
+    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if(!response.ok) {
+      const errorBody = await response.json();
+      console.error("API error Response:", errorBody);
+      throw new Error(`API request failed with status ${response.status}: ${errorBody.error?.message || 'Unknown error'}`);
+    }
+
+    const result = await response.json();
+    const textContent = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (textContent) {
+      res.status(200).json(textContent);
+    } else {
+      console.error("Unexpected API response structure:", result);
+      throw new Error("Failed to get a valid response from the API.");
+    }
+  } catch (error) {
+    console.error("Error in /simple-extract endpoint:", error);
+    res.status(500).json({ error: "An internal server error occurred." });
+  }
 });
 
 const port = 3001;
