@@ -86,8 +86,9 @@ const ComplexResultsPage: React.FC<ComplexResultsPageProps> = ({
         isLoading={isLoading} 
         goToPage={goToPage}
       />
-      <div style={{ marginBottom: '24.5px' }}>
+      <div style={{ paddingBottom: '24.5px'}}>
   <button
+  onClick={exportPDF}
     style={{
       display: 'flex',
       justifyContent: 'center',

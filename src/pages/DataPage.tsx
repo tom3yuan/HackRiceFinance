@@ -249,7 +249,7 @@ function DataPage({ onSwitchToPDF, companyCode }: DataPageProps) {
             borderRadius: '99999px',
             border: 'none',
             height: '35px',
-            background: '#6EB644',
+            background: '#90C96E',
             color: '#1a202c',
             fontSize: '15px',
             cursor: 'pointer',

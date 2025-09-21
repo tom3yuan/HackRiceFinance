@@ -94,7 +94,6 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
 
       
 
-      <div className="results-content">
         
         <h2 className="results-title">RESULTS</h2>
 
@@ -149,12 +148,8 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
         ) : (
           <p>No results available.</p>
         )}
-      </div>
-      </div>
-      <div>
-
-      <SwitchViewButton onSwitch={onSwitch} />
-      <button
+        <div style={{ paddingBottom: '24.5px'}}>
+        <button
   onClick={exportPDF}
   className="export-pdf-button"
   style={{
@@ -171,10 +166,19 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
             alignItems: 'center',
             fontFamily: "'Poppins', sans-serif",
             transition: 'background-color 0.3s, transform 0.3s',
-            marginLeft: '50px',
           }}>
   Export as PDF
 </button>
+</div>
+      </div>
+      
+      <div>
+        
+    <div>
+
+</div>
+      <SwitchViewButton onSwitch={onSwitch} />
+      
       </div>
       
     </div>

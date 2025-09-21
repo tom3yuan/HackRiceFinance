@@ -124,7 +124,7 @@
   }
 }
 .switch-view-button {
-  background-color: #6EB644 !important;/* Green color */
+  background-color:#90C96E !important;/* Green color */
   color: rgb(0, 0, 0);             /* Text color */
   border: none;
   border-radius: 99999px !important;       /* Slightly rounded corners */
@@ -148,4 +148,12 @@
 .switch-view-button:active {
   background-color: #1e7e34; /* Even darker green when pressed */
   transform: scale(0.95);
+}
+.scroll-wrapper {
+  height: 900px;          /* full viewport height */
+  overflow-y: scroll;  
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;       /* scrollable */
+  padding-bottom: 25px;
+  box-sizing: border-box; /* ensures padding doesn’t cut into width */
 }

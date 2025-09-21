@@ -102,7 +102,7 @@ function HomePage({ extractedData, file, onReady, onSwitchtoPDF }: HomePageProps
     borderRadius: "99999px",
     border: "none",
     height: "35px",
-    background: "#6EB644",
+    background: "#90C96E",
     color: "#000000ff",
     fontSize: "15px",
     cursor: "pointer",
