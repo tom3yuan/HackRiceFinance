@@ -210,9 +210,9 @@
   transform: scale(1.05);    /* Slightly enlarge on hover */
 }
 .scroll-wrapper {
-  height: 88vh;          /* full viewport height */
+  height: 900px;          /* full viewport height */
   overflow-y: scroll;  
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(215, 2, 2);
   margin-top: 30px;       /* scrollable */
   padding: 20px;          /* space from edges */
   box-sizing: border-box; /* ensures padding doesn’t cut into width */

@@ -44,33 +44,34 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
   const input = document.getElementById("results-to-pdf");
   if (!input) return;
 
-  html2canvas(input, { scale: 2 }).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
+  // Temporarily remove scroll
+  const originalHeight = input.style.height;
+  input.style.height = 'auto';
 
+  html2canvas(input, { scale: 2 }).then((canvas) => {
+    const pdf = new jsPDF("p", "mm", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const imgProps = pdf.getImageProperties(imgData);
+    const imgProps = pdf.getImageProperties(canvas);
     const imgWidth = pdfWidth;
     const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
     let heightLeft = imgHeight;
     let position = 0;
 
-    // Add the first page
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-
-    // Add extra pages if content overflows
     while (heightLeft > 0) {
-      position = heightLeft - imgHeight; // calculate position for the next chunk
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      //const pageHeight = Math.min(heightLeft, pdfHeight);
+      pdf.addImage(canvas, "PNG", 0, -position, imgWidth, imgHeight);
       heightLeft -= pdfHeight;
+      position += pdfHeight;
+      if (heightLeft > 0) pdf.addPage();
     }
 
     pdf.save("results.pdf");
+
+    // Restore original height
+    input.style.height = originalHeight;
   });
 };
 
@@ -153,10 +154,29 @@ function ResultsPage({ onSwitch, isLoading, aiText }: ResultsPageProps) {
       <div>
 
       <SwitchViewButton onSwitch={onSwitch} />
-      </div>
-    <button onClick={exportPDF} className="export-pdf-button">
+      <button
+  onClick={exportPDF}
+  className="export-pdf-button"
+  style={{
+            padding: '10px 20px',
+            borderRadius: '99999px',
+            border: 'none',
+            height: '35px',
+            background: '#90C96E',
+            color: '#1a202c',
+            fontSize: '15px',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontFamily: "'Poppins', sans-serif",
+            transition: 'background-color 0.3s, transform 0.3s',
+            marginLeft: '50px',
+          }}>
   Export as PDF
 </button>
+      </div>
+      
     </div>
   );
 }

@@ -13,20 +13,21 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: [ "http://localhost:5173", "http://168.5.149.113:5173" ]
+  origin: [ "http://localhost:5173", "http://168.5.149.113:5173", "https://financeworks-1047819053272.us-central1.run.app/" ]
 }));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-
+{/*}
 const fileToBase64 = (file) => new Promise((resolve, reject) => {
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = () => resolve(reader.result.split(',')[1]);
   reader.onerror = error => reject(error);
 });
+*/}
 
 
 /*
@@ -242,5 +243,5 @@ app.post("/api/explain", async (req, res) => {
   }
 });
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Backend running on port ${port}`));
