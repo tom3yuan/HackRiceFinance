@@ -76,7 +76,7 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
     return (
         <div
             style={{
-                padding: "20px",
+                padding: "0px",
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
@@ -102,9 +102,13 @@ function HomePage({ onGenerate, isLoading, extractedData, file, onReady, onSwitc
             height: "35px",
             background: "#6EB644", /* Tailwind cyan-400 */
             color: "#1a202c", /* Tailwind gray-900 */
-            fontWeight: "bold",
             fontSize: "15px",
             cursor: "pointer",
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center",
+            fontFamily: "'Poppins', sans-serif",
+
             transition: "background-color 0.3s, transform 0.3s"
         }}
     >

@@ -188,12 +188,12 @@
 }
 .switch-view-button {
   background-color: #6EB644 !important;/* Green color */
-  color: white;             /* Text color */
+  color: rgb(0, 0, 0);             /* Text color */
   border: none;
   border-radius: 99999px !important;       /* Slightly rounded corners */
   padding: 10px 20px !important;       /* Adjust padding as needed */
   cursor: pointer;
-  width: 120px !important;
+  width: 200px !important;
   height: 35px !important;
   align-items: center !important;       /* Vertically center text */
   justify-content: center !important;   /* Horizontally center text */

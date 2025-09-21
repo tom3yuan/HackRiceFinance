@@ -5,6 +5,7 @@
   color: rgb(0, 0, 0); /* pure white text everywhere by default */
   background: transparent;
   height: 100%;
+  padding: 50px;
   opacity: 0; /* start invisible */
   animation: fadeIn 0.3s ease forwards;
   font-family: 'Poppins', sans-serif;
@@ -75,7 +76,6 @@
   height: 50px;
   font-size: 1.5rem;
   color: rgb(0, 0, 0);
-  background: transparent;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -91,7 +91,6 @@
   box-shadow: 0 0 15px rgba(202, 202, 202, 0.4);
   /* box-shadow: 0 0 25px rgba(90, 90, 90, 0.7); */
 }
-
 
 /* --- Keyframe Animations --- */
 
@@ -123,4 +122,28 @@
     height: 40px;
     font-size: 1.2rem;
   }
+}
+.switch-view-button {
+  background-color: #6EB644 !important;/* Green color */
+  color: rgb(0, 0, 0);             /* Text color */
+  border: none;
+  border-radius: 99999px !important;       /* Slightly rounded corners */
+  padding: 10px 20px !important;       /* Adjust padding as needed */
+  cursor: pointer;
+  width: 200px !important;
+  height: 35px !important;
+  align-items: center !important;       /* Vertically center text */
+  justify-content: center !important;   /* Horizontally center text */
+  font-size: 15px !important;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.switch-view-button:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05);    /* Slightly enlarge on hover */
+}
+
+.switch-view-button:active {
+  background-color: #1e7e34; /* Even darker green when pressed */
+  transform: scale(0.95);
 }

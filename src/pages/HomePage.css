@@ -9,7 +9,7 @@
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); /* same as landing */
   color: white;
   padding: 20px;
-  animation: fadeIn 0.8s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* Headline */

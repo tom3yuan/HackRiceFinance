@@ -1,6 +1,6 @@
 import './ComplexResultsPage.css';
 import React from "react";
-import MarkdownViewer from './MarkdownViewer';
+import MarkdownViewer from './MarkdownViewer';   // ✅ use this one only
 
 // ====================================================================
 // SwitchViewButton
@@ -9,15 +9,18 @@ interface SwitchViewButtonProps {
   onSwitch: () => void;
 }
 
+alert("⚡ ComplexResultsPage ran!");
 const SwitchViewButton: React.FC<SwitchViewButtonProps> = ({ onSwitch }) => {
   return (
-    <button
-      onClick={onSwitch}
-      className="switch-view-button"
-      aria-label="Switch view"
-    >
-      &#x2192; {/* Arrow Icon */}
-    </button>
+    <div>
+      <button
+        onClick={onSwitch}
+        className="switch-view-button"
+        aria-label="Switch view"
+      >
+        Go to simple view {/* Arrow Icon */}
+      </button>
+    </div>
   );
 };
 
@@ -37,17 +40,18 @@ const ComplexResultsPage: React.FC<ComplexResultsPageProps> = ({
   onSwitch,
   goToPage,
 }) => {
-  console.log(aiText);
+  console.log("➡️ Passing props to MarkdownViewer", { aiText, isLoading });
   return (
+    
     <div className="results-container">
-      {/* MarkdownViewer will handle parsing + page buttons */}
+      {/* ✅ This now correctly uses your imported MarkdownViewer */}
+      
       <MarkdownViewer 
         aiText={aiText} 
         isLoading={isLoading} 
         goToPage={goToPage}
       />
 
-      {/* Switch view button */}
       <SwitchViewButton onSwitch={onSwitch} />
     </div>
   );

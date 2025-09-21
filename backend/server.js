@@ -181,5 +181,67 @@ app.post("/complex-extract", upload.single('file'), async (req, res) => {
   }
 });
 
+app.post("/api/explain", async (req, res) => {
+  try {
+    const raw = (req.body?.text ?? "").toString().trim();
+    if (!raw) return res.status(400).json({ error: "No text provided" });
+
+    // Enforce server-side cap (mirrors front-end)
+    const snippet = raw.slice(0, 1200);
+
+    // Build a short deterministic prompt for explanations
+    const systemPrompt = [
+      "You explain selected snippets for non-experts.",
+      "Rules:",
+      "- Detect the snippet language and reply in that language.",
+      "- 2–4 concise sentences; define jargon briefly if present.",
+      "- Be neutral and avoid speculation.",
+      "",
+      `Snippet:\n"""${snippet}"""`,
+    ].join("\n");
+
+    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+    const payload = {
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: systemPrompt }]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 180
+      }
+    };
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errBody = await response.text().catch(() => null);
+      console.error("Explain API error:", response.status, errBody);
+      return res.status(502).json({ error: "Upstream model request failed" });
+    }
+
+    const result = await response.json();
+    const explanation = result.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+
+    if (!explanation) {
+      console.error("Unexpected explain response:", result);
+      return res.status(500).json({ error: "No explanation returned" });
+    }
+
+    return res.json({ explanation });
+  } catch (err) {
+    console.error("Error in /api/explain:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 const port = 3001;
 app.listen(port, () => console.log(`Backend running on port ${port}`));

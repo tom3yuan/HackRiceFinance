@@ -12,5 +12,156 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Context menu -->
+    <div id="explain-menu" role="menu" aria-hidden="true" style="display:none;position:absolute;z-index:2147483647;">
+      <button id="explain-action" role="menuitem" type="button" style="
+        min-width:120px;padding:8px 12px;border:1px solid #ddd;border-radius:8px;
+        background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.12);cursor:pointer;
+      ">Explain</button>
+    </div>
+
+    <!-- Popover bubble where the explanation appears -->
+    <div id="explain-popover" role="dialog" aria-live="polite" aria-hidden="true" style="
+      display:none;position:absolute;z-index:2147483646;max-width:420px;
+      padding:10px 12px;border:1px solid #e5e5e5;border-radius:10px;background:#fff;
+      box-shadow:0 8px 28px rgba(0,0,0,.15);font:14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    "></div>
+
+    <script type="module">
+    (() => {
+      const MENU_ID = 'explain-menu';
+      const ACTION_ID = 'explain-action';
+      const POPOVER_ID = 'explain-popover';
+      const API_URL = 'http://localhost:3001/api/explain'; // change if your backend lives elsewhere
+
+      const menu = document.getElementById(MENU_ID);
+      const actionBtn = document.getElementById(ACTION_ID);
+      const popover = document.getElementById(POPOVER_ID);
+
+      let lastRange = null;
+      let lastText = '';
+
+      // Utility: is the target inside an editable control?
+      function isEditable(el) {
+        return !!el.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
+      }
+
+      // Utility: get selected text + range safely
+      function getSelectionInfo() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return { text: '', range: null };
+        const text = sel.toString().trim();
+        if (!text) return { text: '', range: null };
+        const range = sel.getRangeAt(0).cloneRange();
+        return { text, range };
+      }
+
+      // Show a tiny custom menu only when there IS a text selection.
+      document.addEventListener('contextmenu', (e) => {
+        const { text, range } = getSelectionInfo();
+        if (!text || isEditable(e.target)) return; // fall through to native menu
+        e.preventDefault();
+        lastRange = range;
+        // Trim to avoid huge payloads (server enforces too)
+        lastText = text.slice(0, 1200);
+
+        // Position near cursor, keep within viewport
+        const menuRect = { w: 140, h: 40 };
+        const x = Math.min(e.pageX, window.scrollX + document.documentElement.clientWidth - menuRect.w - 8);
+        const y = Math.min(e.pageY, window.scrollY + document.documentElement.clientHeight - menuRect.h - 8);
+
+        menu.style.left = `${x}px`;
+        menu.style.top = `${y}px`;
+        menu.style.display = 'block';
+        menu.setAttribute('aria-hidden', 'false');
+        actionBtn.focus();
+      });
+
+      // Hide menu on generic click/escape/scroll/resize
+      function hideMenu() {
+        menu.style.display = 'none';
+        menu.setAttribute('aria-hidden', 'true');
+      }
+      document.addEventListener('click', (e) => { if (!menu.contains(e.target)) hideMenu(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideMenu(); });
+      window.addEventListener('resize', hideMenu);
+      window.addEventListener('scroll', hideMenu, true);
+
+      // Popover helpers
+      function showPopoverAtRange(range, message) {
+        if (!range) return;
+        const rect = range.getBoundingClientRect();
+        const pageX = window.scrollX + rect.left;
+        const pageY = window.scrollY + rect.bottom + 8; // 8px below selection
+
+        popover.textContent = message;
+        popover.style.left = `${Math.max(pageX, window.scrollX + 8)}px`;
+        popover.style.top = `${pageY}px`;
+        popover.style.display = 'block';
+        popover.setAttribute('aria-hidden', 'false');
+      }
+      function updatePopover(htmlString) {
+        // VERY basic sanitization: convert to text, then allow minimal formatting if you later add Markdown rendering.
+        popover.textContent = '';
+        const p = document.createElement('div');
+        p.textContent = htmlString;
+        popover.appendChild(p);
+      }
+      function hidePopover() {
+        popover.style.display = 'none';
+        popover.setAttribute('aria-hidden', 'true');
+      }
+      // Hide popover on outside click
+      document.addEventListener('click', (e) => {
+        if (popover.style.display === 'block' && !popover.contains(e.target)) {
+          hidePopover();
+        }
+      });
+
+      // Keyboard shortcut (accessibility): Ctrl/Cmd+E explains current selection.
+      document.addEventListener('keydown', (e) => {
+        const isAccel = e.ctrlKey || e.metaKey;
+        if (isAccel && e.key.toLowerCase() === 'e') {
+          const { text, range } = getSelectionInfo();
+          if (text && !isEditable(document.activeElement || document.body)) {
+            e.preventDefault();
+            lastText = text.slice(0, 1200);
+            lastRange = range;
+            runExplain();
+          }
+        }
+      });
+
+      actionBtn.addEventListener('click', () => {
+        hideMenu();
+        if (lastText) runExplain();
+      });
+
+      async function runExplain() {
+        showPopoverAtRange(lastRange, 'Explaining…');
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: lastText })
+          });
+          if (!res.ok) {
+            const err = await res.text();
+            updatePopover('Sorry—couldn’t get an explanation right now.');
+            console.error(err);
+            return;
+          }
+          const data = await res.json();
+          updatePopover(data.explanation || data.text || 'No explanation returned.');
+        } catch (err) {
+          updatePopover('Network error while contacting the explainer service.');
+          console.error(err);
+        }
+      }
+    })();
+    </script>
+
+
   </body>
 </html>

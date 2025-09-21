@@ -22,7 +22,8 @@
     "react-pdf": "^10.1.0",
     "react-router-dom": "^7.9.1",
     "showdown": "^2.1.0",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "unist-builder": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
